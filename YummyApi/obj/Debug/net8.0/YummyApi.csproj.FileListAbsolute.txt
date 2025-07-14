@@ -1,0 +1,7 @@
+/Users/megbilisim/Desktop/yummyApi/YummyApi/obj/Debug/net8.0/YummyApi.csproj.AssemblyReference.cache
+/Users/megbilisim/Desktop/yummyApi/YummyApi/obj/Debug/net8.0/YummyApi.GeneratedMSBuildEditorConfig.editorconfig
+/Users/megbilisim/Desktop/yummyApi/YummyApi/obj/Debug/net8.0/YummyApi.AssemblyInfoInputs.cache
+/Users/megbilisim/Desktop/yummyApi/YummyApi/obj/Debug/net8.0/YummyApi.AssemblyInfo.cs
+/Users/megbilisim/Desktop/yummyApi/YummyApi/obj/Debug/net8.0/YummyApi.csproj.CoreCompileInputs.cache
+/Users/megbilisim/Desktop/yummyApi/YummyApi/obj/Debug/net8.0/YummyApi.MvcApplicationPartsAssemblyInfo.cs
+/Users/megbilisim/Desktop/yummyApi/YummyApi/obj/Debug/net8.0/YummyApi.MvcApplicationPartsAssemblyInfo.cache
