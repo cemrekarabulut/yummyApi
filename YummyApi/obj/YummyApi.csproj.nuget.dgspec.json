@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/megbilisim/Desktop/yummyApi/YummyApi/YummyApi.csproj": {}
+    "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj": {}
   },
   "projects": {
-    "/Users/megbilisim/Desktop/yummyApi/YummyApi/YummyApi.csproj": {
+    "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/megbilisim/Desktop/yummyApi/YummyApi/YummyApi.csproj",
+        "projectUniqueName": "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj",
         "projectName": "YummyApi",
-        "projectPath": "/Users/megbilisim/Desktop/yummyApi/YummyApi/YummyApi.csproj",
-        "packagesPath": "/Users/megbilisim/.nuget/packages/",
-        "outputPath": "/Users/megbilisim/Desktop/yummyApi/YummyApi/obj/",
+        "projectPath": "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj",
+        "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
+        "outputPath": "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/megbilisim/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -43,11 +43,29 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[15.0.1, )"
+            },
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.1, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.18, )"
             },
             "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.7, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
               "target": "Package",
               "version": "[9.0.7, )"
             },
@@ -75,7 +93,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.412/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.412/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

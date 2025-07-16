@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,7 +8,8 @@ namespace YummyApi.entities
 {
     public class Feature
     {
-        public int FeaturedId { get; set; }
+        
+        public int FeatureId { get; set; }
 
         public string Title { get; set; }
 

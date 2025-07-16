@@ -11,7 +11,8 @@ namespace YummyApi.Context
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server = ;initial catalog=ApiYummyDb;integrated security = true;");
+            optionsBuilder.UseSqlServer("Server=LAPTOP-PS5F1P6O\\SQLEXPRESS;Initial Catalog=ApiYummyDb;Integrated Security=True;TrustServerCertificate=True;");
+
         }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Chef> Chefs { get; set; }
