@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace YummyApi.entities
+namespace YummyApi.Dtos.ContactDtos.ProductDtos
 {
-    public class Product
+    public class CreateProductDto
     {
-        public int ProductId { get; set; }
 
         public string ProductName { get; set; }
 
@@ -17,8 +16,6 @@ namespace YummyApi.entities
 
         public string ImageUrl { get; set; }
 
-        public int? CategoryId { get; set; }
-
-        public Category category { get; set; }
+        public int CategoryId { get; set; } 
     }
 }

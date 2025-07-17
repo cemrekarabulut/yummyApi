@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj": {}
+    "C:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj": {}
   },
   "projects": {
-    "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj": {
+    "C:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj",
+        "projectUniqueName": "C:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj",
         "projectName": "YummyApi",
-        "projectPath": "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj",
+        "projectPath": "C:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\YummyApi.csproj",
         "packagesPath": "C:\\Users\\hp\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\obj\\",
+        "outputPath": "C:\\Users\\hp\\Documents\\GitHub\\yummyApi\\YummyApi\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\hp\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -45,11 +45,15 @@
           "dependencies": {
             "AutoMapper": {
               "target": "Package",
-              "version": "[15.0.1, )"
+              "version": "[12.0.1, )"
             },
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
               "version": "[12.0.1, )"
+            },
+            "FluentValidation.AspNetCore": {
+              "target": "Package",
+              "version": "[11.3.1, )"
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",

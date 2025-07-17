@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using YummyApi.Dtos.ContactDtos.FeatureDtos;
 using YummyApi.Dtos.ContactDtos.MessageDto;
+using YummyApi.Dtos.ContactDtos.ProductDtos;
 using YummyApi.entities;
 
 namespace YummyApi.Mapping
@@ -23,6 +24,8 @@ namespace YummyApi.Mapping
             CreateMap<Message, UpdateMessageDto>().ReverseMap();
             CreateMap<Message, GetByIdMessageDto>().ReverseMap();
 
+            CreateMap<Product, CreateProductDto>().ReverseMap();
+            CreateMap<Product, ResultProductWithCategoryDto>().ForMember(x => x.CategoryName, y => y.MapFrom(z => z.category.CategoryName)).ReverseMap();
        } 
     }
 }
