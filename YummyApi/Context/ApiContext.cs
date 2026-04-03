@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YummyApi.entities;
 
@@ -9,21 +5,21 @@ namespace YummyApi.Context
 {
     public class ApiContext : DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public ApiContext(DbContextOptions<ApiContext> options) : base(options)
         {
-            optionsBuilder.UseSqlServer("Server=LAPTOP-PS5F1P6O\\SQLEXPRESS;Initial Catalog=ApiYummyDb;Integrated Security=True;TrustServerCertificate=True;");
-
         }
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Chef> Chefs { get; set; }
-        public DbSet<Contact> Contacts { get; set; }
-        public DbSet<Feature> Features { get; set; }
-        public DbSet<Image> Images { get; set; }
-        public DbSet<Message> Messages { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Reservation> Reservations { get; set; }
-        public DbSet<Service> Services { get; set; }
-        public DbSet<Testimonial> Testimonials{ get; set; }
 
+        public DbSet<Category> Categories => Set<Category>();
+        public DbSet<Chef> Chefs => Set<Chef>();
+        public DbSet<Contact> Contacts => Set<Contact>();
+        public DbSet<Feature> Features => Set<Feature>();
+        public DbSet<Image> Images => Set<Image>();
+        public DbSet<Message> Messages => Set<Message>();
+        public DbSet<Product> Products => Set<Product>();
+        public DbSet<Reservation> Reservations => Set<Reservation>();
+        public DbSet<AppUser> AppUsers => Set<AppUser>();
+        public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+        public DbSet<Service> Services => Set<Service>();
+        public DbSet<Testimonial> Testimonials => Set<Testimonial>();
     }
 }

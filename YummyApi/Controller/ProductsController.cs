@@ -1,96 +1,100 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using YummyApi.Context;
 using YummyApi.Dtos.ContactDtos.ProductDtos;
 using YummyApi.entities;
+using YummyApi.Services;
 
 namespace YummyApi.Controller
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly IValidator<Product> _validator;
-        private readonly ApiContext _context;
-        private readonly IMapper _mapper;
+        private readonly IProductService _productService;
 
-        public ProductsController(IValidator<Product> validator, ApiContext context, IMapper mapper)
+        public ProductsController(IValidator<Product> validator, IProductService productService)
         {
             _validator = validator;
-            _context = context;
-            _mapper = mapper;
+            _productService = productService;
         }
+
         [HttpGet]
-        public IActionResult ProductList()
+        public async Task<IActionResult> ProductList(CancellationToken cancellationToken)
         {
-            var values = _context.Products.ToList();
-            _context.SaveChanges();
+            var values = await _productService.GetAllAsync(cancellationToken);
             return Ok(values);
         }
+
         [HttpPost]
-        public IActionResult CreateProduct(Product product)
+        public async Task<IActionResult> CreateProduct([FromBody] Product product, CancellationToken cancellationToken)
         {
             var validationResult = _validator.Validate(product);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
             }
-            else
-            {
-                _context.Products.Add(product);
-                _context.SaveChanges();
-                return Ok("Ürün ekleme işlemi başarılı.");
-            }
+
+            await _productService.CreateAsync(product, cancellationToken);
+            return Ok("Ürün ekleme işlemi başarılı.");
         }
+
         [HttpDelete]
-        public IActionResult DeleteProduct(int id)
+        public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken)
         {
-            var value = _context.Products.Find(id);
-            _context.Products.Remove(value);
-            _context.SaveChanges();
-            return Ok("Kategori silme işlemi başarılı.");
+            var deleted = await _productService.DeleteAsync(id, cancellationToken);
+            if (!deleted)
+            {
+                return NotFound("Ürün bulunamadı.");
+            }
+
+            return Ok("Ürün silme işlemi başarılı.");
         }
+
         [HttpGet("GetProduct")]
-        public IActionResult GetProduct(int id)
+        public async Task<IActionResult> GetProduct(int id, CancellationToken cancellationToken)
         {
-            var value = _context.Products.Find(id);
+            var value = await _productService.GetByIdAsync(id, cancellationToken);
+            if (value is null)
+            {
+                return NotFound("Ürün bulunamadı.");
+            }
+
             return Ok(value);
         }
+
         [HttpPut]
-        public IActionResult UpdateProduct(Product product)
+        public async Task<IActionResult> UpdateProduct([FromBody] Product product, CancellationToken cancellationToken)
         {
             var validationResult = _validator.Validate(product);
             if (!validationResult.IsValid)
             {
                 return BadRequest(validationResult.Errors.Select(x => x.ErrorMessage));
             }
-            else
+
+            var updated = await _productService.UpdateAsync(product, cancellationToken);
+            if (!updated)
             {
-                _context.Products.Update(product);
-                _context.SaveChanges();
-                return Ok("Ürün güncelleme işlemi başarılı.");
+                return NotFound("Ürün bulunamadı.");
             }
+
+            return Ok("Ürün güncelleme işlemi başarılı.");
         }
+
         [HttpPost("CreateProductWithCategory")]
-        public IActionResult CreateProducWithCategory(CreateProductDto createProductDto)
+        public async Task<IActionResult> CreateProducWithCategory([FromBody] CreateProductDto createProductDto, CancellationToken cancellationToken)
         {
-            var value = _mapper.Map<Product>(createProductDto);
-            _context.Products.Add(value);
-            _context.SaveChanges();
+            await _productService.CreateWithCategoryAsync(createProductDto, cancellationToken);
             return Ok("Ekleme işlemi başarılı.");
         }
+
         [HttpGet("ProductListWithCategory")]
-        public IActionResult GetProductListWithCategory()
+        public async Task<IActionResult> GetProductListWithCategory(CancellationToken cancellationToken)
         {
-            var value = _context.Products.Include(x => x.category).ToList();
-            return Ok(_mapper.Map<List<ResultProductWithCategoryDto>>(value));
-            
-        } 
+            var value = await _productService.GetProductListWithCategoryAsync(cancellationToken);
+            return Ok(value);
+        }
     }
 }

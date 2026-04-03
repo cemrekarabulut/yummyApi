@@ -1,67 +1,69 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YummyApi.Context;
 using YummyApi.Dtos.ContactDtos;
+using YummyApi.Services;
 
 namespace YummyApi.Controller
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class ContactsController : ControllerBase
     {
-        private readonly ApiContext _context;
+        private readonly IContactService _contactService;
 
-        public ContactsController(ApiContext context)
+        public ContactsController(IContactService contactService)
         {
-            _context = context;
+            _contactService = contactService;
         }
+
         [HttpGet]
-        public IActionResult ContactList()
+        public async Task<IActionResult> ContactList(CancellationToken cancellationToken)
         {
-            var values = _context.Contacts.ToList();
+            var values = await _contactService.GetAllAsync(cancellationToken);
             return Ok(values);
         }
+
         [HttpPost]
-        public IActionResult CreateContact(CreateContactDto createContactDto)
+        public async Task<IActionResult> CreateContact([FromBody] CreateContactDto createContactDto, CancellationToken cancellationToken)
         {
-            Contact contact = new Contact();
-            contact.Email = createContactDto.Email;
-            contact.Adress = createContactDto.Adress;
-            contact.Phone = createContactDto.Phone;
-            contact.MapLocation = createContactDto.MapLocation;
-            contact.OpenHours = createContactDto.OpenHours;
-            _context.Contacts.Add(contact);
-            _context.SaveChanges();
+            await _contactService.CreateAsync(createContactDto, cancellationToken);
             return Ok("Ekleme işlemi başarılı.");
         }
+
         [HttpDelete]
-        public IActionResult DeleteContact(int id)
+        public async Task<IActionResult> DeleteContact(int id, CancellationToken cancellationToken)
         {
-            var value = _context.Contacts.Find(id);
-            _context.Contacts.Remove(value);
-            _context.SaveChanges();
+            var deleted = await _contactService.DeleteAsync(id, cancellationToken);
+            if (!deleted)
+            {
+                return NotFound("İletişim kaydı bulunamadı.");
+            }
+
             return Ok("Silme işlemi başarılı.");
         }
+
         [HttpGet("GetContact")]
-        public IActionResult GetContact(int id) {
-            var value = _context.Contacts.Find(id);
+        public async Task<IActionResult> GetContact(int id, CancellationToken cancellationToken)
+        {
+            var value = await _contactService.GetByIdAsync(id, cancellationToken);
+            if (value is null)
+            {
+                return NotFound("İletişim kaydı bulunamadı.");
+            }
+
             return Ok(value);
         }
+
         [HttpPut]
-        public IActionResult UpdateContact(UpdateContactDto updateContactDto)
+        public async Task<IActionResult> UpdateContact([FromBody] UpdateContactDto updateContactDto, CancellationToken cancellationToken)
         {
-            Contact contact = new Contact();
-            contact.Email = updateContactDto.Email;
-            contact.Adress = updateContactDto.Adress;
-            contact.Phone = updateContactDto.Phone;
-            contact.ContactId = updateContactDto.ContactId;
-            contact.MapLocation = updateContactDto.MapLocation;
-            contact.OpenHours = updateContactDto.OpenHours;
-            _context.Contacts.Update(contact);
-            _context.SaveChanges();
+            var updated = await _contactService.UpdateAsync(updateContactDto, cancellationToken);
+            if (!updated)
+            {
+                return NotFound("İletişim kaydı bulunamadı.");
+            }
+
             return Ok("Güncelleme işlemi başarılı.");
         }
     }

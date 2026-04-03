@@ -1,54 +1,62 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YummyApi.Context;
 using YummyApi.Dtos.ContactDtos.MessageDto;
-using YummyApi.entities;
+using YummyApi.Services;
 
 namespace YummyApi.Controller
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class MessagesController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly ApiContext _context;
+        private readonly IMessageService _messageService;
 
-        public MessagesController(IMapper mapper, ApiContext context)
+        public MessagesController(IMessageService messageService)
         {
-            _mapper = mapper;
-            _context = context;
+            _messageService = messageService;
         }
+
         [HttpGet]
-        public IActionResult MessageList()
+        public async Task<IActionResult> MessageList(CancellationToken cancellationToken)
         {
-            var value = _context.Messages.ToList();
-            _context.SaveChanges();
-            return Ok(_mapper.Map<List<ResultMessageDto>>(value));
+            var value = await _messageService.GetAllAsync(cancellationToken);
+            return Ok(value);
         }
+
         [HttpDelete]
-        public IActionResult DeleteMessage(int id)
+        public async Task<IActionResult> DeleteMessage(int id, CancellationToken cancellationToken)
         {
-            var value = _context.Messages.Find(id);
-            _context.Messages.Remove(value);
-            _context.SaveChanges();
+            var deleted = await _messageService.DeleteAsync(id, cancellationToken);
+            if (!deleted)
+            {
+                return NotFound("Mesaj bulunamadı.");
+            }
+
             return Ok("Mesaj silme işlemi başarılı.");
         }
+
         [HttpGet("GetMessage")]
-        public IActionResult GetMessage(int id)
+        public async Task<IActionResult> GetMessage(int id, CancellationToken cancellationToken)
         {
-            var value = _context.Messages.Find(id);
-            return Ok(_mapper.Map<GetByIdMessageDto>(value));
+            var value = await _messageService.GetByIdAsync(id, cancellationToken);
+            if (value is null)
+            {
+                return NotFound("Mesaj bulunamadı.");
+            }
+
+            return Ok(value);
         }
+
         [HttpPut]
-        public IActionResult UpdateMessage(UpdateMessageDto updateMessageDto)
+        public async Task<IActionResult> UpdateMessage([FromBody] UpdateMessageDto updateMessageDto, CancellationToken cancellationToken)
         {
-            var value = _mapper.Map<Message>(updateMessageDto);
-            _context.Messages.Update(value);
-            _context.SaveChanges();
+            var updated = await _messageService.UpdateAsync(updateMessageDto, cancellationToken);
+            if (!updated)
+            {
+                return NotFound("Mesaj bulunamadı.");
+            }
+
             return Ok("Güncelleme işlemi başarılı.");
         }
     }

@@ -1,57 +1,69 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YummyApi.Context;
 using YummyApi.entities;
+using YummyApi.Services;
 
 namespace YummyApi.Controller
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class CategoriesController : ControllerBase
     {
-        private readonly ApiContext? _context;
+        private readonly ICategoryService _categoryService;
 
-        public CategoriesController(ApiContext? context)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
+
         [HttpGet]
-        public IActionResult CategoryList()
+        public async Task<IActionResult> CategoryList(CancellationToken cancellationToken)
         {
-            var values = _context.Categories.ToList();
+            var values = await _categoryService.GetAllAsync(cancellationToken);
             return Ok(values);
         }
 
         [HttpPost]
-
-        public IActionResult CreateCategory(Category category)
+        public async Task<IActionResult> CreateCategory([FromBody] Category category, CancellationToken cancellationToken)
         {
-            _context.Categories.Add(category);
-            _context.SaveChanges();
+            await _categoryService.CreateAsync(category, cancellationToken);
             return Ok("Kategori ekleme işlemi başarılı");
         }
+
         [HttpDelete]
-        public IActionResult DeleteCategory(int id)
+        public async Task<IActionResult> DeleteCategory(int id, CancellationToken cancellationToken)
         {
-            var value = _context.Categories.Find(id);
-            _context.Categories.Remove(value);
-            _context.SaveChanges();
+            var deleted = await _categoryService.DeleteAsync(id, cancellationToken);
+            if (!deleted)
+            {
+                return NotFound("Kategori bulunamadı.");
+            }
+
             return Ok("Kategori silme başarılı");
         }
+
         [HttpGet("GetCategory")]
-        public IActionResult GetCategory(int id)
+        public async Task<IActionResult> GetCategory(int id, CancellationToken cancellationToken)
         {
-            var value = _context.Categories.Find(id);
+            var value = await _categoryService.GetByIdAsync(id, cancellationToken);
+            if (value is null)
+            {
+                return NotFound("Kategori bulunamadı.");
+            }
+
             return Ok(value);
         }
+
         [HttpPut]
-        public IActionResult UpdateCategory(Category category)
+        public async Task<IActionResult> UpdateCategory([FromBody] Category category, CancellationToken cancellationToken)
         {
-            _context.Categories.Update(category);
-            _context.SaveChanges();
+            var updated = await _categoryService.UpdateAsync(category, cancellationToken);
+            if (!updated)
+            {
+                return NotFound("Kategori bulunamadı.");
+            }
+
             return Ok("Kategori güncelleme işlemi başarılı");
         }
     }

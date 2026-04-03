@@ -1,53 +1,69 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using YummyApi.Context;
 using YummyApi.entities;
+using YummyApi.Services;
 
 namespace YummyApi.Controller
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class ChefsController : ControllerBase
     {
-        private readonly ApiContext _context;
-        public ChefsController(ApiContext context)
+        private readonly IChefService _chefService;
+
+        public ChefsController(IChefService chefService)
         {
-            _context = context;
+            _chefService = chefService;
         }
+
         [HttpGet]
-        public IActionResult ChesfList()
+        public async Task<IActionResult> ChesfList(CancellationToken cancellationToken)
         {
-            var values = _context.Chefs.ToList();
+            var values = await _chefService.GetAllAsync(cancellationToken);
             return Ok(values);
         }
+
         [HttpPost]
-        public IActionResult CreateChef(Chef chef)
+        public async Task<IActionResult> CreateChef([FromBody] Chef chef, CancellationToken cancellationToken)
         {
-            _context.Chefs.Add(chef);
-            _context.SaveChanges();
+            await _chefService.CreateAsync(chef, cancellationToken);
             return Ok("Şef sisteme başarıyla eklendi.");
         }
+
         [HttpDelete]
-        public IActionResult DeleteChef(int id)
+        public async Task<IActionResult> DeleteChef(int id, CancellationToken cancellationToken)
         {
-            var value = _context.Chefs.Find(id);
-            _context.Chefs.Remove(value);
-            _context.SaveChanges();
+            var deleted = await _chefService.DeleteAsync(id, cancellationToken);
+            if (!deleted)
+            {
+                return NotFound("Şef bulunamadı.");
+            }
+
             return Ok("Şef sistemden silindi.");
         }
+
         [HttpGet("GetChef")]
-        public IActionResult GetChef(int id)
+        public async Task<IActionResult> GetChef(int id, CancellationToken cancellationToken)
         {
-            return Ok(_context.Chefs.Find(id));
+            var chef = await _chefService.GetByIdAsync(id, cancellationToken);
+            if (chef is null)
+            {
+                return NotFound("Şef bulunamadı.");
+            }
+
+            return Ok(chef);
         }
+
         [HttpPut]
-        public IActionResult UpdateChef(Chef chef)
+        public async Task<IActionResult> UpdateChef([FromBody] Chef chef, CancellationToken cancellationToken)
         {
-            _context.Chefs.Update(chef);
-            _context.SaveChanges();
+            var updated = await _chefService.UpdateAsync(chef, cancellationToken);
+            if (!updated)
+            {
+                return NotFound("Şef bulunamadı.");
+            }
+
             return Ok("Şef güncelleme işlemi başarılı");
         }
     }
